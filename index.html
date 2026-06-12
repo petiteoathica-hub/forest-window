@@ -1,93 +1,200 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>客間の窓</title>
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
-      background: linear-gradient(#1f2b3a, #0f141c);
-      color: #f5efe2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 24px;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>客間の窓</title>
 
-    .app {
-      max-width: 520px;
-      width: 100%;
-      text-align: center;
-    }
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+    background: #efe4cf;
+    color: #3c2f24;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
 
-    .window {
-      border: 2px solid rgba(245, 239, 226, 0.5);
-      border-radius: 24px;
-      padding: 28px 22px;
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 0 32px rgba(255, 255, 255, 0.12);
-    }
+  .app {
+    width: 100%;
+    max-width: 720px;
+    text-align: center;
+  }
 
-    h1 {
-      font-size: 30px;
-      margin-bottom: 8px;
-    }
+  .room {
+    position: relative;
+    padding: 28px 22px;
+    border-radius: 26px;
+    background: linear-gradient(135deg, #f6eddc, #d9c7a8);
+    box-shadow: 0 20px 50px rgba(80, 55, 30, 0.25);
+    overflow: hidden;
+  }
 
-    .subtitle {
-      font-size: 14px;
-      opacity: 0.85;
-      margin-bottom: 24px;
-      line-height: 1.8;
-    }
+  .window {
+    position: relative;
+    width: min(82vw, 420px);
+    height: min(82vw, 420px);
+    max-height: 420px;
+    margin: 0 auto 24px;
+    border: 10px solid #8b765a;
+    border-radius: 48% 48% 8% 8%;
+    background: linear-gradient(#d7b987, #6d7f78 45%, #2f4d43);
+    box-shadow: inset 0 0 30px rgba(255,255,255,0.4),
+                0 0 30px rgba(150, 110, 60, 0.25);
+    overflow: hidden;
+  }
 
-    .card-name {
-      font-size: 28px;
-      margin: 20px 0 8px;
-    }
+  .forest {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(255,220,160,0.55), rgba(30,60,55,0.65)),
+      radial-gradient(circle at 50% 35%, rgba(255,220,150,0.8), transparent 35%);
+  }
 
-    .keyword {
-      font-size: 14px;
-      opacity: 0.8;
-      margin-bottom: 20px;
-    }
+  .forest::before,
+  .forest::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    width: 120%;
+    height: 60%;
+    background:
+      linear-gradient(to top, rgba(24,55,44,0.85), transparent),
+      repeating-linear-gradient(
+        90deg,
+        transparent 0 26px,
+        rgba(30,70,55,0.55) 27px 34px,
+        transparent 35px 70px
+      );
+    filter: blur(1px);
+  }
 
-    .message {
-      font-size: 18px;
-      line-height: 1.9;
-      white-space: pre-line;
-      margin-bottom: 24px;
-    }
+  .grid {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent 48%, #574532 49%, #574532 51%, transparent 52%),
+      linear-gradient(transparent 32%, #574532 33%, #574532 35%, transparent 36%),
+      linear-gradient(transparent 64%, #574532 65%, #574532 67%, transparent 68%);
+    opacity: 0.8;
+  }
 
-    button {
-      border: none;
-      border-radius: 999px;
-      padding: 14px 28px;
-      font-size: 16px;
-      background: #d8c28a;
-      color: #1f1a10;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    }
+  .shine {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(255,244,204,0.95), rgba(255,244,204,0.25) 35%, transparent 70%);
+    opacity: 0;
+    transform: scale(0.5);
+    pointer-events: none;
+  }
 
-    button:active {
-      transform: translateY(1px);
-    }
+  .whiteout {
+    position: fixed;
+    inset: 0;
+    background: #fff8df;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+  }
 
-    .footer {
-      margin-top: 18px;
-      font-size: 12px;
-      opacity: 0.6;
-    }
-  </style>
+  h1 {
+    font-size: 34px;
+    margin: 10px 0 14px;
+  }
+
+  .subtitle {
+    line-height: 1.9;
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+
+  .message {
+    font-size: 18px;
+    line-height: 1.9;
+    white-space: pre-line;
+  }
+
+  .card-name {
+    font-size: 30px;
+    margin: 18px 0 8px;
+  }
+
+  .keyword {
+    font-size: 14px;
+    opacity: 0.75;
+    margin-bottom: 18px;
+  }
+
+  button {
+    border: none;
+    border-radius: 999px;
+    padding: 14px 34px;
+    font-size: 16px;
+    background: #d8bd7f;
+    color: #3a2a17;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(90, 55, 20, 0.25);
+  }
+
+  button:disabled {
+    opacity: 0.6;
+  }
+
+  .footer {
+    margin-top: 18px;
+    font-size: 12px;
+    opacity: 0.65;
+  }
+
+  .opening .window {
+    animation: windowGlow 1.6s ease-in-out;
+  }
+
+  .opening .shine {
+    animation: shineOpen 1.6s ease-in-out;
+  }
+
+  .opening .whiteout {
+    animation: whiteFlash 1.8s ease-in-out;
+  }
+
+  @keyframes windowGlow {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.02); box-shadow: 0 0 55px rgba(255,210,120,0.9); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes shineOpen {
+    0% { opacity: 0; transform: scale(0.4); }
+    50% { opacity: 1; transform: scale(1.25); }
+    100% { opacity: 0; transform: scale(2.2); }
+  }
+
+  @keyframes whiteFlash {
+    0% { opacity: 0; }
+    55% { opacity: 0; }
+    75% { opacity: 0.95; }
+    100% { opacity: 0; }
+  }
+</style>
 </head>
+
 <body>
-  <main class="app">
-    <section class="window">
+  <main class="app" id="app">
+    <section class="room">
+      <div class="window">
+        <div class="forest"></div>
+        <div class="grid"></div>
+        <div class="shine"></div>
+      </div>
+
       <h1>客間の窓</h1>
+
       <p class="subtitle">
         森の小屋の客間には、<br>
         今必要な景色を映す窓があります。
@@ -97,146 +204,68 @@
         <p class="message">窓の向こうは、まだ静かです。</p>
       </div>
 
-      <button onclick="drawCard()">窓を見る</button>
+      <button id="drawButton" onclick="startOracle()">窓を見る</button>
     </section>
 
     <p class="footer">森の小屋オラクル 試作版</p>
+    <div class="whiteout"></div>
   </main>
 
-  <script>
-    const cards = [
-      {
-        name: "小屋の灯",
-        keyword: "希望・灯火",
-        message: "大きく変えなくてもいい。\\n今日灯せる範囲を灯そう。"
-      },
-      {
-        name: "暖炉の火",
-        keyword: "情熱・火種",
-        message: "小さな火種を守る。\\n勢いより継続。"
-      },
-      {
-        name: "窓辺の作業机",
-        keyword: "制作・実践",
-        message: "考えるより少しだけ手を動かす。"
-      },
-      {
-        name: "月の湯",
-        keyword: "調律・休息",
-        message: "答えを探す前に整える。"
-      },
-      {
-        name: "地下室の宝箱",
-        keyword: "保留・熟成",
-        message: "今は開かないものもある。"
-      },
-      {
-        name: "ソラの書斎",
-        keyword: "記録・整理",
-        message: "言葉にすると見えてくる。"
-      },
-      {
-        name: "老師の紙片",
-        keyword: "知恵・余裕",
-        message: "深刻さを少し笑いに変えてみる。"
-      },
-      {
-        name: "真珠色の金魚",
-        keyword: "魂・内なる声",
-        message: "静かな場所に答えは泳いでいる。"
-      },
-      {
-        name: "森の白猫",
-        keyword: "気まぐれ・癒し",
-        message: "予定外の優しさを受け取る。"
-      },
-      {
-        name: "桃の若木",
-        keyword: "成長・未来",
-        message: "見えなくても育っている。"
-      },
-      {
-        name: "トルマリンの泉",
-        keyword: "浄化・循環",
-        message: "濁りは流してしまおう。"
-      },
-      {
-        name: "白日花",
-        keyword: "開放・存在",
-        message: "理由はいらない。\\nただ咲けばいい。"
-      },
-      {
-        name: "灯花",
-        keyword: "勇気・夜の光",
-        message: "闇の中にも灯りはある。"
-      },
-      {
-        name: "雪解",
-        keyword: "再開・流れ",
-        message: "止まっていたものが動き出す。"
-      },
-      {
-        name: "名もなき空色",
-        keyword: "自由・余白",
-        message: "名前のない喜びを大切に。"
-      },
-      {
-        name: "光のきざはし",
-        keyword: "導き・兆し",
-        message: "まだ全部見えなくても進める。"
-      },
-      {
-        name: "星降りの湖",
-        keyword: "広い視点・神秘",
-        message: "少し高い場所から眺めてみる。"
-      },
-      {
-        name: "眠り龍の谷",
-        keyword: "力・静観",
-        message: "今は起こさなくていい力もある。"
-      },
-      {
-        name: "森のフクロウ",
-        keyword: "観察・洞察",
-        message: "急がず、まず見る。"
-      },
-      {
-        name: "月夜の誓い",
-        keyword: "自己信頼・約束",
-        message: "自分との約束を思い出す。"
-      },
-      {
-        name: "魔法の地図",
-        keyword: "選択・現在地",
-        message: "目的地より現在地を知る。"
-      },
-      {
-        name: "行商人の荷車",
-        keyword: "交換・出会い",
-        message: "持っているものと、\\n受け取るものは同じではない。"
-      },
-      {
-        name: "風の抜け道",
-        keyword: "移動・変化",
-        message: "場所を変えると風向きも変わる。"
-      },
-      {
-        name: "ひと枝",
-        keyword: "選択・十分",
-        message: "全部は要らない。\\n一本で十分。"
-      }
-    ];
+<script>
+const cards = [
+  { name: "小屋の灯", keyword: "希望・灯火", message: "大きく変えなくてもいい。\\n今日灯せる範囲を灯そう。" },
+  { name: "暖炉の火", keyword: "情熱・火種", message: "小さな火種を守る。\\n勢いより継続。" },
+  { name: "窓辺の作業机", keyword: "制作・実践", message: "考えるより少しだけ手を動かす。" },
+  { name: "月の湯", keyword: "調律・休息", message: "答えを探す前に整える。" },
+  { name: "地下室の宝箱", keyword: "保留・熟成", message: "今は開かないものもある。" },
+  { name: "ソラの書斎", keyword: "記録・整理", message: "言葉にすると見えてくる。" },
+  { name: "老師の紙片", keyword: "知恵・余裕", message: "深刻さを少し笑いに変えてみる。" },
+  { name: "真珠色の金魚", keyword: "魂・内なる声", message: "静かな場所に答えは泳いでいる。" },
+  { name: "森の白猫", keyword: "気まぐれ・癒し", message: "予定外の優しさを受け取る。" },
+  { name: "桃の若木", keyword: "成長・未来", message: "見えなくても育っている。" },
+  { name: "トルマリンの泉", keyword: "浄化・循環", message: "濁りは流してしまおう。" },
+  { name: "白日花", keyword: "開放・存在", message: "理由はいらない。\\nただ咲けばいい。" },
+  { name: "灯花", keyword: "勇気・夜の光", message: "闇の中にも灯りはある。" },
+  { name: "雪解", keyword: "再開・流れ", message: "止まっていたものが動き出す。" },
+  { name: "名もなき空色", keyword: "自由・余白", message: "名前のない喜びを大切に。" },
+  { name: "光のきざはし", keyword: "導き・兆し", message: "まだ全部見えなくても進める。" },
+  { name: "星降りの湖", keyword: "広い視点・神秘", message: "少し高い場所から眺めてみる。" },
+  { name: "眠り龍の谷", keyword: "力・静観", message: "今は起こさなくていい力もある。" },
+  { name: "森のフクロウ", keyword: "観察・洞察", message: "急がず、まず見る。" },
+  { name: "月夜の誓い", keyword: "自己信頼・約束", message: "自分との約束を思い出す。" },
+  { name: "魔法の地図", keyword: "選択・現在地", message: "目的地より現在地を知る。" },
+  { name: "行商人の荷車", keyword: "交換・出会い", message: "持っているものと、\\n受け取るものは同じではない。" },
+  { name: "風の抜け道", keyword: "移動・変化", message: "場所を変えると風向きも変わる。" },
+  { name: "ひと枝", keyword: "選択・十分", message: "全部は要らない。\\n一本で十分。" }
+];
 
-    function drawCard() {
-      const randomIndex = Math.floor(Math.random() * cards.length);
-      const card = cards[randomIndex];
+function startOracle() {
+  const app = document.getElementById("app");
+  const button = document.getElementById("drawButton");
 
-      document.getElementById("result").innerHTML = `
-        <h2 class="card-name">${card.name}</h2>
-        <p class="keyword">${card.keyword}</p>
-        <p class="message">${card.message}</p>
-      `;
-    }
-  </script>
+  button.disabled = true;
+  app.classList.add("opening");
+
+  setTimeout(() => {
+    drawCard();
+  }, 1350);
+
+  setTimeout(() => {
+    app.classList.remove("opening");
+    button.disabled = false;
+  }, 1900);
+}
+
+function drawCard() {
+  const randomIndex = Math.floor(Math.random() * cards.length);
+  const card = cards[randomIndex];
+
+  document.getElementById("result").innerHTML = `
+    <h2 class="card-name">${card.name}</h2>
+    <p class="keyword">${card.keyword}</p>
+    <p class="message">${card.message}</p>
+  `;
+}
+</script>
 </body>
 </html>
