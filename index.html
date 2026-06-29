@@ -82,7 +82,7 @@ h1 {
   margin: 18px 0 18px;
 }
 
-  .subtitle {
+ .subtitle {
     line-height: 120%;
     font-size: 18px;
     margin-bottom: 20px;
@@ -130,15 +130,27 @@ h1 {
   button:disabled {
     opacity: 0.6;
   }
- .button-area {
+
+ /*.button-area {
    text-align: center;
    margin-top: 2px;
    min-height: 18vh;
    display: flex;
    align-items: center;
    justify-content: center;
+}*/
+
+  .button-area {
+  position: fixed;
+  left: 50%;
+  bottom: 95px;
+  transform: translateX(-50%);
+  width: 62%;
+  max-width: 300px;
+  z-index: 10;
 }
- .button-area button {
+ 
+  .button-area button {
    width: 220px;
 }
   
