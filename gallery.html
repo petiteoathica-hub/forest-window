@@ -5,31 +5,44 @@
 <title>小屋の幻灯</title>
 </head>
 
+<style>
+.flash{
+
+    background:white;
+
+    opacity:0;
+
+}
+
+</style>
+  
 <body>
 
-<div class="gallery-frame">
-  <img id="galleryImage" src="cards/card01_0.png">
-</div>
+  <div class="gallery-frame">
+    <img id="galleryImage" src="cards/card01_0.png">
+  </div>
 
-<button onclick="location.href='index.html'">
+  <button onclick="location.href='index.html'">
   客間へ戻る
-</button>
+  </button>
 
 
-<script>
- let current = 1;
-
-setInterval(() => {
-  current++;
-
-  if (current > 24) {
-    current = 1;
-  }
-
-  const number = String(current).padStart(2, "0");
-  document.getElementById("galleryImage").src = `cards/card${number}_0.png`;
-}, 5000); 
-</script> 
+  <script>
+    setInterval(() => {
+        galleryImage.classList.add("whiteout");
+        setTimeout(() => {
+            current++;
+            if(current > 24){
+                current = 1;
+            }
+            const number = String(current).padStart(2,"0");
+            galleryImage.src =
+            `cards/card${number}_0.png`;
+            galleryImage.classList.remove("whiteout");
+          
+        },1500);
+    },5000);
+  </script> 
 
 </body>
   
