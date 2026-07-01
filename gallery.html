@@ -5,38 +5,38 @@
 <title>小屋の幻灯</title>
 </head>
 
+
+    
 <style>
     .gallery-frame{
         position:relative;
     }
 
+    #galleryImage {
+      display: block;
+      width: 100%;
+    }
+    
     #flash{
-
         position:absolute;
         inset:0;
-
         background:white;
-
         opacity:0;
-
         pointer-events:none;
-
         transition:opacity 1.2s ease;
     }
 
     #flash.active{
-
         opacity:1;
     }
 </style>
   
 <body>
-
-  <div class="gallery-frame">
+　<div class="gallery-frame">
     <img id="galleryImage">
     <div id="flash"></div>
 　</div>
-
+    
   <button onclick="location.href='index.html'">
   客間へ戻る
   </button>
@@ -44,9 +44,9 @@
 <script>
   let current = 1;
   const galleryImage = document.getElementById("galleryImage");
-
+  const flash = document.getElementById("flash");
+  
   setInterval(() => {
-    const flash = document.getElementById("flash");
     flash.classList.add("active");
     
       setTimeout(() => {
@@ -57,11 +57,10 @@
       }
 
       const number = String(current).padStart(2, "0");
-
       galleryImage.src = `cards/card${number}_0.png`;
 
       galleryImage.classList.remove("active");
-    }, 1500);
+    }, 1200);
 
   }, 5000);
 </script>
