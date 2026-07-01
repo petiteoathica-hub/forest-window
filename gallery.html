@@ -6,21 +6,36 @@
 </head>
 
 <style>
-.flash{
+    .gallery-frame{
+        position:relative;
+    }
 
-    background:white;
+    #flash{
 
-    opacity:0;
+        position:absolute;
+        inset:0;
 
-}
+        background:white;
 
+        opacity:0;
+
+        pointer-events:none;
+
+        transition:opacity 1.2s ease;
+    }
+
+    #flash.active{
+
+        opacity:1;
+    }
 </style>
   
 <body>
 
   <div class="gallery-frame">
-    <img id="galleryImage" src="cards/card01_0.png">
-  </div>
+    <img id="galleryImage">
+    <div id="flash"></div>
+　</div>
 
   <button onclick="location.href='index.html'">
   客間へ戻る
@@ -31,9 +46,10 @@
   const galleryImage = document.getElementById("galleryImage");
 
   setInterval(() => {
-    galleryImage.classList.add("whiteout");
-
-    setTimeout(() => {
+    const flash = document.getElementById("flash");
+    flash.classList.add("active");
+    
+      setTimeout(() => {
       current++;
 
       if (current > 24) {
@@ -44,7 +60,7 @@
 
       galleryImage.src = `cards/card${number}_0.png`;
 
-      galleryImage.classList.remove("whiteout");
+      galleryImage.classList.remove("active");
     }, 1500);
 
   }, 5000);
