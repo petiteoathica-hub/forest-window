@@ -277,6 +277,9 @@ const cards = [
   { name: "ひと枝", keyword: "感謝・借りる", message: "力を借りればいい\n対価は喜びと感謝だ", image: "cards/card24.png" }
 ];
 
+let pressTimer;
+let longPressed = false;
+
 function startOracle() {
   const app = document.getElementById("app");
   const button = document.getElementById("drawButton");
@@ -286,11 +289,11 @@ function startOracle() {
 
   setTimeout(() => {
     drawCard();
+    button.style.display = "none";
   }, 1350);
 
   setTimeout(() => {
     app.classList.remove("opening");
-    button.disabled = false;
   }, 1900);
 }
 
@@ -299,11 +302,36 @@ function drawCard() {
   const card = cards[randomIndex];
 
   document.getElementById("result").innerHTML = `
-   <h2 class="card-name">${card.name}</h2>
-   <p class="keyword">${card.keyword}</p>
-   <img class="card-image" src="${card.image}" alt="${card.name}">
-   <p class="message">${card.message}</p>
+    <h2 class="card-name">${card.name}</h2>
+    <p class="keyword">${card.keyword}</p>
+    <img class="card-image" id="cardImage" src="${card.image}" alt="${card.name}">
+    <p class="message">${card.message}</p>
   `;
+
+  const cardImage = document.getElementById("cardImage");
+
+  cardImage.addEventListener("click", () => {
+    if (!longPressed) {
+      drawCard();
+    }
+  });
+
+  cardImage.addEventListener("pointerdown", () => {
+    longPressed = false;
+
+    pressTimer = setTimeout(() => {
+      longPressed = true;
+      location.href = "gallery.html";
+    }, 800);
+  });
+
+  cardImage.addEventListener("pointerup", () => {
+    clearTimeout(pressTimer);
+  });
+
+  cardImage.addEventListener("pointerleave", () => {
+    clearTimeout(pressTimer);
+  });
 }
 </script>
 </body>
