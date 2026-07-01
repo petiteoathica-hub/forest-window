@@ -11,13 +11,20 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
-  background: url("window.png") center top / cover fixed no-repeat;
-  color: #2f261f;
+  color: #3c2f24;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  /*padding: 12px;*/
+  padding: 12px;
   box-sizing: border-box;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("window.png") center top / cover no-repeat;
+  z-index: -1;
 }
 
   #result {
