@@ -299,10 +299,10 @@ function drawCard() {
   const card = cards[randomIndex];
 
   document.getElementById("result").innerHTML = `
-   <img class="card-image" src="${card.image}" alt="${card.name}">
    <h2 class="card-name">${card.name}</h2>
    <p class="keyword">${card.keyword}</p>
    <p class="message">${card.message}</p>
+   <img class="card-image" src="${card.image}" alt="${card.name}">
   `;
 }
 </script>
