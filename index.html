@@ -91,6 +91,9 @@ h1 {
   display: block;
   margin: 18px auto 18px;
   box-shadow: 0 16px 35px rgba(40, 25, 10, 0.35);
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
     
   .message {
@@ -304,7 +307,7 @@ function drawCard() {
   document.getElementById("result").innerHTML = `
     <h2 class="card-name">${card.name}</h2>
     <p class="keyword">${card.keyword}</p>
-    <img class="card-image" id="cardImage" src="${card.image}" alt="${card.name}">
+    <img class="card-image" id="cardImage" src="${card.image}" alt="${card.name}" draggable="false">
     <p class="message">${card.message}</p>
   `;
 
@@ -332,6 +335,10 @@ function drawCard() {
   cardImage.addEventListener("pointerleave", () => {
     clearTimeout(pressTimer);
   });
+  
+　cardImage.addEventListener("contextmenu", (event) => {
+  　event.preventDefault();
+　});
 }
 </script>
 </body>
