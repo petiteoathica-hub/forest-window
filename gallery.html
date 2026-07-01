@@ -41,26 +41,43 @@
 
 <script>
   let current = 1;
+
+  const total = 24;
   const galleryImage = document.getElementById("galleryImage");
   const flash = document.getElementById("flash");
-  
-  setInterval(() => {
-    flash.classList.add("active");
-    
-    setTimeout(() => {
-      current++;
 
-      if (current > 24) {
-        current = 1;
-      }
+  function getImagePath(number) {
+    const padded = String(number).padStart(2, "0");
+    return `cards/card${padded}_0.png`;
+  }
 
-      const number = String(current).padStart(2, "0");
-      galleryImage.src = `cards/card${number}_0.png`;
+  function nextImage() {
+    let next = current + 1;
 
-      flash.classList.remove("active");
-    }, 1200);
+    if (next > total) {
+      next = 1;
+    }
 
-  }, 5000);
+    const nextPath = getImagePath(next);
+
+    // 次の画像を先に読み込む
+    const preload = new Image();
+    preload.src = nextPath;
+
+    preload.onload = () => {
+      // 読み込み完了してから白くする
+      flash.classList.add("active");
+
+      setTimeout(() => {
+        galleryImage.src = nextPath;
+        current = next;
+
+        flash.classList.remove("active");
+      }, 1200);
+    };
+  }
+
+  setInterval(nextImage, 5000);
 </script>
   
 
