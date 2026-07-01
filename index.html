@@ -82,10 +82,11 @@ h1 {
   }
 
 .card-image {
-  width: 60%;
-  /*max-width: 220px;*/
+  width: 70%;
+  max-width: 360px;
+  max-height: 45vh;
   aspect-ratio: 3 / 4;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 16px;
   display: block;
   margin: 18px auto 18px;
@@ -126,7 +127,7 @@ h1 {
 
  .button-area {
    text-align: center;
-   margin-top: 20px;
+   margin: 20px auto 32px;
    min-height: 18vh;
    display: flex;
    align-items: center;
@@ -177,7 +178,7 @@ h1 {
  @media (max-width: 500px) {
   .room {
     width: 62%;
-    margin: 60px auto 0;
+    margin: 40px auto 0;
     padding: 0 auto 0px;
   }
 
@@ -215,6 +216,10 @@ h1 {
   button {
     padding: 12px 30px;
   }
+ .button-area {
+   margin: 10px auto 5px;
+ }
+   
 }
 </style>
 </head>
