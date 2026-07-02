@@ -155,7 +155,7 @@ h1 {
     animation: shineOpen 1.6s ease-in-out;
   }
 
-  .opening .whiteout {
+  .app.opening ~ .whiteout {
     animation: whiteFlash 1.8s ease-in-out;
   }
 
@@ -281,19 +281,22 @@ h1 {
 <body>
   <main class="app" id="app">
     <section class="room">
-　　
-      <div id="result">
-        <h1>客間の窓</h1>
-        <p class="subtitle">
-          森の小屋の客間には、<br>
-          今必要な景色を映す<br>
-          窓があります。
-        </p>
+      <div class="window">
+        <div id="result">
+          <h1>客間の窓</h1>
+          <p class="subtitle">
+            森の小屋の客間には、<br>
+            今必要な景色を映す<br>
+            窓があります。
+          </p>
         <p class="message">
           窓の向こうは、まだ静かです。
         </p>
-      </div>
-    </section> 
+    </div>
+
+    <div class="shine"></div>
+  </div>
+</section>
 
     <div class="button-area">
       <button id="drawButton" onclick="startOracle()">窓を見る</button>
