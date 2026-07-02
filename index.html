@@ -315,9 +315,19 @@ function drawCard() {
 
   cardImage.addEventListener("click", () => {
     if (!longPressed) {
-      drawCard();
-    }
-  });
+      const app = document.getElementById("app");
+
+      app.classList.add("opening");
+
+      setTimeout(() => {
+        drawCard();
+      }, 1350);
+
+    setTimeout(() => {
+      app.classList.remove("opening");
+    }, 1900);
+  }
+});
 
   cardImage.addEventListener("pointerdown", () => {
     longPressed = false;
@@ -336,9 +346,9 @@ function drawCard() {
     clearTimeout(pressTimer);
   });
   
-　cardImage.addEventListener("contextmenu", (event) => {
-  　event.preventDefault();
-　});
+  cardImage.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+  });
 }
 </script>
 </body>
