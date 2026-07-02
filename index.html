@@ -226,6 +226,12 @@ h1 {
    
 }
 
+/*ランタンエフェクト*/  
+  .lantern-opening .shine {
+    animation: lanternFlicker 1.2s ease-in-out;
+  }
+  
+
 /*ギャラリーモード*/
 .hidden {
   display: none;
@@ -407,7 +413,11 @@ function drawCard() {
 
     pressTimer = setTimeout(() => {
       longPressed = true;
+      startLanternEffect();
+
+      setTimeout(() => {
       openGallery();
+      }, 1200);
     }, 800);
   });
 
@@ -461,7 +471,16 @@ function closeGallery() {
   clearInterval(galleryTimer);
   galleryTimer = null;
 }
+  
+function startLanternEffect() {
+  const app = document.getElementById("app");
+  app.classList.add("lantern-opening");
 
+  setTimeout(() => {
+    app.classList.remove("lantern-opening");
+  }, 1200);
+}
+  
 function nextGalleryImage() {
   let next = galleryCurrent + 1;
 
