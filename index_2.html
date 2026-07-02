@@ -10,7 +10,6 @@
 <style>  
 body {
   margin: 0;
-  background: #e8e2d8;
   display: flex;
   justify-content: center;
   padding: 10px;
@@ -38,10 +37,8 @@ body {
   border-radius: 24px;
   overflow: hidden;
   position: relative;
-
   text-align: center;
 }
- 
 
 .room {
   width: min(90%, 560px);
@@ -252,8 +249,17 @@ h1 {
     </div>
 
     <p class="footer">Petite Oathica<br>客間の窓</p>
-    <div class="whiteout"></div>
   </main>
+
+  <div id="galleryMode" class="hidden">
+    <div class="gallery-frame" id="galleryFrame">
+    <div id="flash"></div>
+  </div>
+    <button onclick="closegallery()">客間へ戻る</button>
+  </div> 
+      
+  <div class="whiteout"></div>
+</body>
 
 <script>
 const cards = [
@@ -354,5 +360,5 @@ function drawCard() {
   });
 }
 </script>
-</body>
+
 </html>
