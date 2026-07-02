@@ -343,7 +343,7 @@ function drawCard() {
 
     pressTimer = setTimeout(() => {
       longPressed = true;
-      location.href = "gallery.html";
+      openGallery();
     }, 800);
   });
 
@@ -359,6 +359,59 @@ function drawCard() {
     event.preventDefault();
   });
 }
-</script>
 
+/*ギャラリーモード*/
+let galleryCurrent = 1;
+const galleryTotal = 24;
+
+const galleryMode = document.getElementById("galleryMode");
+const galleryFrame = document.getElementById("galleryFrame");
+const galleryFlash = document.getElementById("galleryFlash");
+
+function getGalleryImagePath(number) {
+  const padded = String(number).padStart(2, "0");
+  return `cards/card${padded}_0.png`;
+}
+
+function openGallery() {
+  const app = document.getElementById("app");
+
+  app.classList.add("hidden");
+  galleryMode.classList.remove("hidden");
+}
+
+function closeGallery() {
+  const app = document.getElementById("app");
+
+  galleryMode.classList.add("hidden");
+  app.classList.remove("hidden");
+}
+
+function nextGalleryImage() {
+  let next = galleryCurrent + 1;
+
+  if (next > galleryTotal) {
+    next = 1;
+  }
+
+  const nextPath = getGalleryImagePath(next);
+
+  const preload = new Image();
+  preload.src = nextPath;
+
+  preload.onload = () => {
+    galleryFlash.classList.add("active");
+
+    setTimeout(() => {
+      galleryFrame.style.backgroundImage = `url("${nextPath}")`;
+      galleryCurrent = next;
+
+      galleryFlash.classList.remove("active");
+    }, 1200);
+  };
+}
+
+setInterval(nextGalleryImage, 5000);  
+  
+</script>
 </html>
