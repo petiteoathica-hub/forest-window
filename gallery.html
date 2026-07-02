@@ -7,7 +7,17 @@
     
 <style>
     .gallery-frame{
-        position:relative;
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+    
+      background-image: url("cards/card01_0.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      border-radius: 24px;
+      overflow: hidden;
     }
 
     #galleryImage {
@@ -30,8 +40,7 @@
 </style>
   
 <body>
-<div class="gallery-frame">
-  <img id="galleryImage" src="cards/card01_0.png" alt="景色帳">
+<div class="gallery-frame" id="galleryFrame">
   <div id="flash"></div>
 </div>
     
@@ -43,7 +52,7 @@
   let current = 1;
 
   const total = 24;
-  const galleryImage = document.getElementById("galleryImage");
+  const galleryImage = document.getElementById("galleryFrame");
   const flash = document.getElementById("flash");
 
   function getImagePath(number) {
@@ -69,7 +78,7 @@
       flash.classList.add("active");
 
       setTimeout(() => {
-        galleryImage.src = nextPath;
+        galleryFrame.style.backgroundImage = `url("${nextPath}")`;
         current = next;
 
         flash.classList.remove("active");
