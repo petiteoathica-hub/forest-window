@@ -416,6 +416,7 @@ function drawCard() {
 }
 
 /*ギャラリーモード*/
+let galleryTimer = null;
 let galleryCurrent = 1;
 const galleryTotal = 24;
 
@@ -433,6 +434,13 @@ function openGallery() {
 
   app.classList.add("hidden");
   galleryMode.classList.remove("hidden");
+
+  galleryCurrent = 1;
+  galleryFrame.style.backgroundImage = `url("${getGalleryImagePath(galleryCurrent)}")`;
+
+  if (galleryTimer === null) {
+    galleryTimer = setInterval(nextGalleryImage, 5000);
+  }
 }
 
 function closeGallery() {
@@ -440,6 +448,9 @@ function closeGallery() {
 
   galleryMode.classList.add("hidden");
   app.classList.remove("hidden");
+
+  clearInterval(galleryTimer);
+  galleryTimer = null;
 }
 
 function nextGalleryImage() {
@@ -466,7 +477,7 @@ function nextGalleryImage() {
   };
 }
 
-setInterval(nextGalleryImage, 5000);  
+/*setInterval(nextGalleryImage, 5000);*/  
   
 </script>
 </html>
