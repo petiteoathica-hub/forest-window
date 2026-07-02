@@ -6,20 +6,32 @@
 </head>
     
 <style>
-    .gallery-frame{
-      position: relative;
-      width: 100%;
-      min-height: 100vh;
-    
-      background-image: url("cards/card01_0.png");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-
-      border-radius: 48px;
-      overflow: hidden;
+    body{
+        margin:0;
+        display:flex;
+        flex-direction:column;
+        height:100vh;
+        padding:12px;
+        box-sizing:border-box;
     }
 
+    .gallery-frame{
+        flex:1;
+        position:relative;
+
+        background-image: url("cards/card01_0.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        border-radius: 48px;
+        overflow: hidden;
+    }
+
+    button{
+        margin-top:12px;
+    }
+    
     #galleryImage {
       display: block;
       width: 100%;
