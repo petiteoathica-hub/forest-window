@@ -448,6 +448,7 @@ function drawCard() {
     soundPlayer.pause();
     soundPlayer.currentTime = 0;
     soundPlayer.src = card.sound;
+    //soundPlayer.volume = 0.2;
     soundPlayer.play().catch(() => {});
   }
 
