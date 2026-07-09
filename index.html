@@ -433,10 +433,10 @@ function startOracle() {
 }
 
 function drawCard() {
-　console.log(randomIndex);
   //カード指定表示テスト用
   //const randomIndex = 13;
   const randomIndex = Math.floor(Math.random() * cards.length);
+  console.log(randomIndex);
   const card = cards[randomIndex];
 
   document.getElementById("result").innerHTML = `
