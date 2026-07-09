@@ -436,9 +436,9 @@ function drawCard() {
   /*カード指定表示テスト用
   const randomIndex = 13;*/
   const randomIndex = Math.floor(Math.random() * cards.length);
-  console.log(randomIndex);
   const card = cards[randomIndex];
-
+  console.log("抽選:", randomIndex, card.name, card.sound);
+  
   document.getElementById("result").innerHTML = `
     <h2 class="card-name">${card.name}</h2>
     <img class="card-image" id="cardImage" src="${card.image}" alt="${card.name}" draggable="false">
