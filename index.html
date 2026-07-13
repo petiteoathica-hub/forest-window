@@ -441,8 +441,8 @@ function startOracle() {
 
 function drawCard() {
   //カード指定表示テスト用
-  const randomIndex = 15;
-  //const randomIndex = Math.floor(Math.random() * cards.length);
+  //const randomIndex = 15;
+  const randomIndex = Math.floor(Math.random() * cards.length);
   const card = cards[randomIndex];
   console.log("抽選:", randomIndex, card.name, card.sound);
   
