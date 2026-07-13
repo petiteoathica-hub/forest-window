@@ -399,7 +399,7 @@ const cards = [
   { name: "灯花", keyword: "【美】勇気・夜の光", message: "闇の中の灯りに目を向けてみる", image: "cards/card13.png" },
   { name: "雪解", keyword: "【善】再開・流れ", message: "止まっていたものが\n動き出す", image: "cards/card14.png", sound: "sounds/stream2.mp3", soundMode: "loop" },
   { name: "名もなき空色", keyword: "【美】自由・伸びやか", message: "名前をつけなくても\nそれは喜び", image: "cards/card15.png", sound: "sounds/birdsong.mp3", soundMode: "random" },
-  { name: "光のきざはし", keyword: "【真】導き・兆し", message: "光が差した場所に\nまだ知らない道がある", image: "cards/card16.png", sound: "Angel05-1L.mp3", soundMode: "once" },
+  { name: "光のきざはし", keyword: "【真】導き・兆し", message: "光が差した場所に\nまだ知らない道がある", image: "cards/card16.png", sound: "sounds/Angel05-1L.mp3", soundMode: "once" },
   { name: "星降りの湖", keyword: "【真】広い視点・神秘", message: "少し高い場所から眺めてみる", image: "cards/card17.png", sound: "sounds/higurashi.mp3", soundMode: "loop" },
   { name: "眠り龍の谷", keyword: "【善】力・静観", message: "今は起こさなくていい力もある", image: "cards/card18.png", sound: "sounds/waterfall.mp3", soundMode: "loop" },
   { name: "森のフクロウ", keyword: "【善】観察・洞察", message: "急がず\nまず見る", image: "cards/card19.png", sound: "sounds/owl.mp3", soundMode: "random" },
@@ -441,8 +441,8 @@ function startOracle() {
 
 function drawCard() {
   //カード指定表示テスト用
-  //const randomIndex = 1;
-  const randomIndex = Math.floor(Math.random() * cards.length);
+  const randomIndex = 15;
+  //const randomIndex = Math.floor(Math.random() * cards.length);
   const card = cards[randomIndex];
   console.log("抽選:", randomIndex, card.name, card.sound);
   
