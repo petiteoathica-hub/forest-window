@@ -364,9 +364,55 @@ button:disabled {
 <script src="cards.js"></script>
 <script>
 // ========================================
+// タイマーの共通管理
+// ========================================
+const timerRegistry = new Map();
+
+// 指定した名前のタイマーがあれば停止し、管理表から取り除く
+function clearManagedTimer(name) {
+  const timer = timerRegistry.get(name);
+
+  if (!timer) {
+    return;
+  }
+
+  if (timer.type === "interval") {
+    clearInterval(timer.id);
+  } else {
+    clearTimeout(timer.id);
+  }
+
+  timerRegistry.delete(name);
+}
+
+// 複数のタイマーをまとめて停止する
+function clearManagedTimers(...names) {
+  names.forEach(clearManagedTimer);
+}
+
+// 名前付きのsetTimeoutを登録し、同名の古いタイマーがあれば置き換える
+function setManagedTimeout(name, callback, delay) {
+  clearManagedTimer(name);
+
+  const id = setTimeout(() => {
+    timerRegistry.delete(name);
+    callback();
+  }, delay);
+
+  timerRegistry.set(name, { id, type: "timeout" });
+}
+
+// 名前付きのsetIntervalを登録し、同名の古いタイマーがあれば置き換える
+function setManagedInterval(name, callback, delay) {
+  clearManagedTimer(name);
+
+  const id = setInterval(callback, delay);
+  timerRegistry.set(name, { id, type: "interval" });
+}
+
+// ========================================
 // カードの抽選・表示・タップ操作
 // ========================================
-let pressTimer;
 let longPressed = false;
 
 // 最初の抽選演出を開始し、演出の途中でカードを表示する
@@ -377,12 +423,12 @@ function startOracle() {
   button.disabled = true;
   app.classList.add("opening");
 
-  setTimeout(() => {
+  setManagedTimeout("openingDraw", () => {
     drawCard();
     button.style.display = "none";
   }, 1350);
 
-  setTimeout(() => {
+  setManagedTimeout("openingEnd", () => {
     app.classList.remove("opening");
   }, 1900);
 }
@@ -413,38 +459,38 @@ function drawCard() {
 
       app.classList.add("opening");
 
-      setTimeout(() => {
+      setManagedTimeout("openingDraw", () => {
         drawCard();
       }, 1350);
 
-    setTimeout(() => {
-      app.classList.remove("opening");
-    }, 1900);
-  }
-});
+      setManagedTimeout("openingEnd", () => {
+        app.classList.remove("opening");
+      }, 1900);
+    }
+  });
 
   // 長押しを開始し、800ミリ秒続いたらギャラリーを開く
   cardImage.addEventListener("pointerdown", () => {
     longPressed = false;
 
-    pressTimer = setTimeout(() => {
+    setManagedTimeout("longPress", () => {
       longPressed = true;
       startLanternEffect();
 
-      setTimeout(() => {
-      openGallery();
+      setManagedTimeout("galleryOpen", () => {
+        openGallery();
       }, 1200);
     }, 800);
   });
 
   // 指を離したときは長押し判定を取り消す
   cardImage.addEventListener("pointerup", () => {
-    clearTimeout(pressTimer);
+    clearManagedTimer("longPress");
   });
 
   // 指やポインターが画像の外へ出たときも長押し判定を取り消す
   cardImage.addEventListener("pointerleave", () => {
-    clearTimeout(pressTimer);
+    clearManagedTimer("longPress");
   });
 
   // 長押し時にブラウザのメニューが表示されるのを防ぐ
@@ -457,15 +503,11 @@ function drawCard() {
 // カードごとの音声再生
 // ========================================
 const soundPlayer = new Audio();
-let randomSoundTimer = null;
 let currentSoundCard = null;
 
 // 再生中の音声とランダム再生の予約をすべて停止する
 function stopCardSound() {
-  if (randomSoundTimer !== null) {
-    clearTimeout(randomSoundTimer);
-    randomSoundTimer = null;
-  }
+  clearManagedTimer("randomSound");
 
   currentSoundCard = null;
 
@@ -514,7 +556,7 @@ function scheduleRandomSound(card, isFirstPlay = false) {
   const delay =
     Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
 
-  randomSoundTimer = setTimeout(() => {
+  setManagedTimeout("randomSound", () => {
     if (currentSoundCard !== card) {
       return;
     }
@@ -535,7 +577,7 @@ function startLanternEffect() {
   const app = document.getElementById("app");
   app.classList.add("lantern-opening");
 
-  setTimeout(() => {
+  setManagedTimeout("lanternEnd", () => {
     app.classList.remove("lantern-opening");
   }, 1200);
 }
@@ -543,7 +585,6 @@ function startLanternEffect() {
 // ========================================
 // ギャラリーモード
 // ========================================
-let galleryTimer = null;
 let galleryCurrent = 1;
 const galleryTotal = cards.length;
 
@@ -563,26 +604,29 @@ function openGallery() {
   
   const app = document.getElementById("app");
 
+  clearManagedTimers("openingDraw", "openingEnd", "longPress", "lanternEnd");
+  clearManagedTimers("galleryAuto", "galleryFlash");
+
+  app.classList.remove("opening", "lantern-opening");
+  galleryFlash.classList.remove("active");
   app.classList.add("hidden");
   galleryMode.classList.remove("hidden");
 
   galleryCurrent = 1;
   galleryFrame.style.backgroundImage = `url("${getGalleryImagePath(galleryCurrent)}")`;
 
-  if (galleryTimer === null) {
-    galleryTimer = setInterval(nextGalleryImage, 8000);
-  }
+  setManagedInterval("galleryAuto", nextGalleryImage, 8000);
 }
 
 // ギャラリーの自動表示を止め、通常のカード画面へ戻る
 function closeGallery() {
   const app = document.getElementById("app");
 
+  clearManagedTimers("galleryAuto", "galleryFlash");
+
+  galleryFlash.classList.remove("active");
   galleryMode.classList.add("hidden");
   app.classList.remove("hidden");
-
-  clearInterval(galleryTimer);
-  galleryTimer = null;
 }
 
 // 次のギャラリー画像を先読みし、白い演出を挟んで切り替える
@@ -601,7 +645,7 @@ function nextGalleryImage() {
   preload.onload = () => {
     galleryFlash.classList.add("active");
 
-    setTimeout(() => {
+    setManagedTimeout("galleryFlash", () => {
       galleryFrame.style.backgroundImage = `url("${nextPath}")`;
       galleryCurrent = next;
 
