@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head> <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>客間の窓</title> <link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="小屋の幻灯">
+
+<style>  
+/* 基本レイアウト */
+body {
+  margin: 0;
+  background: #e8e2d8;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  color: #3c2f24;
+}
+
+#result {
+  min-height: 30vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.app {
+  width: 100%;
+  aspect-ratio: 9 / 17;
+
+  background: url("window.png") center top / cover no-repeat;
+
+  box-shadow: 0 10px 40px rgba(0,0,0,.25);
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+}
+
+.room {
+  width: min(90%, 560px);
+  margin: 140px auto;
+  position: relative;
+  border-radius: 26px;
+  background: rgba(255, 248, 230, 0.2);
+  box-shadow: 0 20px 50px rgba(80, 55, 30, 0.25);
+  overflow: hidden;
+  backdrop-filter: blur(2px);
+  padding: 22px 18px 24px;
+}
+
+.shine {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle,
+    rgba(255,244,204,0.95),
+    rgba(255,244,204,0.35) 45%,
+    rgba(255,244,204,0.12) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scale(1.15);
+  pointer-events: none;
+}
+
+.whiteout {
+  position: fixed;
+  inset: 0;
+  background: #fff8df;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* カード内容 */
+h1 {
+  font-size: 2.2rem;
+  margin: 18px 0;
+}
+
+.subtitle {
+  line-height: 120%;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.card-image {
+  width: 70%;
+  max-width: 360px;
+  max-height: 45vh;
+  aspect-ratio: 3 / 4;
+  object-fit: contain;
+  border-radius: 16px;
+  display: block;
+  margin: 18px auto;
+  box-shadow: 0 16px 35px rgba(40, 25, 10, 0.35);
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.message {
+  font-size: 1.1rem;
+  line-height: 120%;
+  /* white-space: pre-line; */
+}
+
+.card-name {
+  font-size: 2.2rem;
+  margin: 18px 0 8px;
+}
+
+.keyword {
+  font-size: 1.2rem;
+  opacity: 0.75;
+  margin-bottom: 18px;
+}
+
+/* 操作部分 */
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 34px;
+  font-size: 16px;
+  background: #d8bd7f;
+  color: #3a2a17;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(90, 55, 20, 0.25);
+}
+
+button:disabled {
+  opacity: 0.6;
+}
+
+.button-area {
+  text-align: center;
+  margin: 20px auto 32px;
+  min-height: 18vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-area button {
+  width: 220px;
+}
+
+.footer {
+  margin-top: 0;
+  font-size: 12px;
+  opacity: 0.65;
+}
+
+/* 抽選演出 */
+.opening .window {
+  animation: windowGlow 1.6s ease-in-out;
+}
+
+.opening .shine {
+  animation: shineOpen 1.6s ease-in-out;
+}
+
+.app.opening ~ .whiteout {
+  animation: whiteFlash 1.8s ease-in-out;
+}
+
+@keyframes windowGlow {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.02); box-shadow: 0 0 55px rgba(255,210,120,0.9); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shineOpen {
+  0% { opacity: 0; transform: scale(0.4); }
+  50% { opacity: 1; transform: scale(1.25); }
+  100% { opacity: 0; transform: scale(2.2); }
+}
+
+@keyframes whiteFlash {
+  0% { opacity: 0; }
+  55% { opacity: 0; }
+  75% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+
+/* スマートフォン表示 */
+@media (max-width: 500px) {
+  .room {
+    width: 65%;
+    margin: 130px auto 0;
+  }
+
+  h1 {
+    font-size: 38px;
+    margin: 5px auto;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    margin-bottom: 5px;
+  }
+     
+  .card-image {
+    width: 100%;
+    margin: 0 auto 5px;
+  }
+
+  .card-name {
+    font-size: 28px;
+    margin: 0 auto 2px;
+  }
+
+  .keyword {
+    font-size: 16px;
+    margin: 0 auto 2px;
+  }
+
+  .message {
+    font-size: 16px;
+    line-height: 110%;
+    white-space: pre-line;
+  }
+    
+  button {
+    padding: 12px 30px;
+  }
+  .button-area {
+    margin: 10px auto 5px;
+  }
+}
+
+/*ランタンエフェクト*/  
+.lantern-opening .shine {
+  animation: lanternBreath 1.2s ease-in-out;
+}
+
+@keyframes lanternBreath {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+
+  35% {
+    opacity: 0.45;
+    transform: scale(1.05);
+  }
+
+  70% {
+    opacity: 0.25;
+    transform: scale(0.98);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+/*ギャラリーモード*/
+.hidden {
+  display: none;
+}
+
+#galleryMode {
+  width: 100%;
+  min-height: 100vh;
+  padding: 12px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#galleryMode.hidden {
+  display: none;
+}
+
+.gallery-frame {
+  flex: 1;
+  position: relative;
+  width: 100%;
+
+  background-image: url("cards/card01_0.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+#galleryFlash {
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s ease;
+}
+
+#galleryFlash.active {
+  opacity: 1;
+}
+
+#galleryMode button {
+  margin: 10px auto;
+  width: 50%;
+  align-items: center;
+  border-radius: 999px;
+  border: none;
+  background: #d9be72;
+  color: #4a321f;
+  font-size: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+</style>
+</head>
+
+<body>
+  <main class="app" id="app">
+    <section class="room">
+      <div class="window">
+        <div id="result">
+          <h1>客間の窓</h1>
+          <p class="subtitle">
+            森の小屋の客間には、<br>
+            今必要な景色を映す<br>
+            窓があります。
+          </p>
+        <p class="message">
+          窓の向こうは、まだ静かです。
+        </p>
+    </div>
+
+    <div class="shine"></div>
+  </div>
+</section>
+
+    <div class="button-area">
+      <button id="drawButton" onclick="startOracle()">窓を見る</button>
+    </div>
+
+    <p class="footer">Petite Oathica<br>客間の窓</p>
+  </main>
+
+  <div id="galleryMode" class="hidden">
+    <div class="gallery-frame" id="galleryFrame">
+      <div id="galleryFlash"></div>
+    </div>
+
+    <button onclick="closeGallery()">客間へ戻る</button>
+  </div>
+      
+  <div class="whiteout"></div>
+</body>
+
+<script src="cards.js"></script>
+<script>
+// ========================================
+// タイマーの共通管理
+// ========================================
+const timerRegistry = new Map();
+
+// 指定した名前のタイマーがあれば停止し、管理表から取り除く
+function clearManagedTimer(name) {
+  const timer = timerRegistry.get(name);
+
+  if (!timer) {
+    return;
+  }
+
+  if (timer.type === "interval") {
+    clearInterval(timer.id);
+  } else {
+    clearTimeout(timer.id);
+  }
+
+  timerRegistry.delete(name);
+}
+
+// 複数のタイマーをまとめて停止する
+function clearManagedTimers(...names) {
+  names.forEach(clearManagedTimer);
+}
+
+// 名前付きのsetTimeoutを登録し、同名の古いタイマーがあれば置き換える
+function setManagedTimeout(name, callback, delay) {
+  clearManagedTimer(name);
+
+  const id = setTimeout(() => {
+    timerRegistry.delete(name);
+    callback();
+  }, delay);
+
+  timerRegistry.set(name, { id, type: "timeout" });
+}
+
+// 名前付きのsetIntervalを登録し、同名の古いタイマーがあれば置き換える
+function setManagedInterval(name, callback, delay) {
+  clearManagedTimer(name);
+
+  const id = setInterval(callback, delay);
+  timerRegistry.set(name, { id, type: "interval" });
+}
+
+// ========================================
+// カードの抽選・表示・タップ操作
+// ========================================
+const cardPointerState = {
+  activePointerId: null,
+  longPressTriggered: false,
+  pointerCanceled: false,
+  actionLocked: false,
+};
+
+// カード操作の状態と、途中の長押し判定を初期状態へ戻す
+function resetCardPointerState() {
+  clearManagedTimer("longPress");
+
+  cardPointerState.activePointerId = null;
+  cardPointerState.longPressTriggered = false;
+  cardPointerState.pointerCanceled = false;
+  cardPointerState.actionLocked = false;
+}
+
+// 短く押したときだけ、演出後の再抽選を1回開始する
+function handleCardClick() {
+  if (
+    cardPointerState.longPressTriggered ||
+    cardPointerState.pointerCanceled ||
+    cardPointerState.actionLocked
+  ) {
+    return;
+  }
+
+  cardPointerState.actionLocked = true;
+
+  const app = document.getElementById("app");
+  app.classList.add("opening");
+
+  setManagedTimeout("openingDraw", () => {
+    drawCard();
+  }, 1350);
+
+  setManagedTimeout("openingEnd", () => {
+    app.classList.remove("opening");
+  }, 1900);
+}
+
+// 主要な指または左クリックで、0.8秒の長押し判定を開始する
+function handleCardPointerDown(event) {
+  if (
+    !event.isPrimary ||
+    event.button !== 0 ||
+    cardPointerState.activePointerId !== null ||
+    cardPointerState.actionLocked
+  ) {
+    return;
+  }
+
+  cardPointerState.activePointerId = event.pointerId;
+  cardPointerState.longPressTriggered = false;
+  cardPointerState.pointerCanceled = false;
+
+  setManagedTimeout("longPress", () => {
+    if (cardPointerState.activePointerId !== event.pointerId) {
+      return;
+    }
+
+    cardPointerState.longPressTriggered = true;
+    cardPointerState.actionLocked = true;
+    startLanternEffect();
+
+    setManagedTimeout("galleryOpen", () => {
+      openGallery();
+    }, 1200);
+  }, 800);
+}
+
+// 指やマウスをカード上で離し、未成立の長押し判定を停止する
+function handleCardPointerUp(event) {
+  if (cardPointerState.activePointerId !== event.pointerId) {
+    return;
+  }
+
+  clearManagedTimer("longPress");
+  cardPointerState.activePointerId = null;
+}
+
+// カード外への移動や端末側の中断時に、未成立の長押し判定を中止する
+function cancelCardPointerPress(event) {
+  if (cardPointerState.activePointerId !== event.pointerId) {
+    return;
+  }
+
+  clearManagedTimer("longPress");
+  cardPointerState.activePointerId = null;
+  cardPointerState.pointerCanceled = true;
+}
+
+// 最初の抽選演出を開始し、演出の途中でカードを表示する
+function startOracle() {
+  const app = document.getElementById("app");
+  const button = document.getElementById("drawButton");
+
+  button.disabled = true;
+  app.classList.add("opening");
+
+  setManagedTimeout("openingDraw", () => {
+    drawCard();
+    button.style.display = "none";
+  }, 1350);
+
+  setManagedTimeout("openingEnd", () => {
+    app.classList.remove("opening");
+  }, 1900);
+}
+
+// カードをランダムに1枚選び、内容と画像を画面に表示する
+function drawCard() {
+  resetCardPointerState();
+
+  // カード指定表示テスト用
+  // const randomIndex = 15;
+  const randomIndex = Math.floor(Math.random() * cards.length);
+  const card = cards[randomIndex];
+  console.log("抽選:", randomIndex, card.name, card.sound);
+  
+  document.getElementById("result").innerHTML = `
+    <h2 class="card-name">${card.name}</h2>
+    <img class="card-image" id="cardImage" src="${card.image}" alt="${card.name}" draggable="false">
+    <p class="keyword">${card.keyword}</p>
+    <p class="message">${card.message}</p>
+  `;
+
+  cardAudioManager.play(card);
+
+  const cardImage = document.getElementById("cardImage");
+
+  cardImage.addEventListener("click", handleCardClick);
+  cardImage.addEventListener("pointerdown", handleCardPointerDown);
+  cardImage.addEventListener("pointerup", handleCardPointerUp);
+  cardImage.addEventListener("pointerleave", cancelCardPointerPress);
+  cardImage.addEventListener("pointercancel", cancelCardPointerPress);
+
+  // 長押し時にブラウザのメニューが表示されるのを防ぐ
+  cardImage.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+  });
+}
+
+// ========================================
+// カードごとの音声再生
+// ========================================
+const cardAudioManager = {
+  player: new Audio(),
+  currentCard: null,
+  sessionId: 0,
+
+  // 前の音声を停止してから、カードのsoundModeに合う再生方法を選ぶ
+  play(card) {
+    this.stop();
+
+    if (!card.sound || card.soundMode === "none") {
+      return;
+    }
+
+    this.currentCard = card;
+    this.player.src = card.sound;
+    this.player.loop = false;
+
+    switch (card.soundMode) {
+      case "loop":
+        this.playLoop();
+        break;
+
+      case "random":
+        this.startRandom(card);
+        break;
+
+      case "once":
+      default:
+        this.playOnce();
+        break;
+    }
+  },
+
+  // 再生中の音声とランダム再生の予約をすべて停止する
+  stop() {
+    this.sessionId += 1;
+    clearManagedTimer("randomSound");
+
+    this.currentCard = null;
+    this.resetPlayer();
+  },
+
+  // 音声プレイヤーを停止し、次のカードで使える初期状態へ戻す
+  resetPlayer() {
+    this.player.pause();
+    this.player.currentTime = 0;
+    this.player.loop = false;
+    this.player.removeAttribute("src");
+    this.player.load();
+  },
+
+  // ブラウザに再生を拒否された場合も、画面の処理を止めずに再生を試す
+  safePlay() {
+    this.player.play().catch(() => {});
+  },
+
+  // 音声を1回だけ再生する
+  playOnce() {
+    this.player.loop = false;
+    this.safePlay();
+  },
+
+  // 音声のループを有効にして再生する
+  playLoop() {
+    this.player.loop = true;
+    this.safePlay();
+  },
+
+  // randomモードの初回再生を予約する
+  startRandom(card) {
+    this.scheduleRandom(card, true, this.sessionId);
+  },
+
+  // randomモードの音声を一定の範囲内のランダムな間隔で再生する
+  scheduleRandom(card, isFirstPlay, sessionId) {
+    const minDelay = isFirstPlay ? 0 : 30000;
+    const maxDelay = isFirstPlay ? 5000 : 90000;
+
+    const delay =
+      Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+
+    setManagedTimeout("randomSound", () => {
+      if (
+        this.sessionId !== sessionId ||
+        this.currentCard !== card
+      ) {
+        return;
+      }
+
+      this.player.currentTime = 0;
+      this.safePlay();
+
+      this.scheduleRandom(card, false, sessionId);
+    }, delay);
+  },
+};
+
+// ========================================
+// 長押し時のランタン演出
+// ========================================
+
+// カードの長押しを検知したときにランタンの光を表示する
+function startLanternEffect() {
+  const app = document.getElementById("app");
+  app.classList.add("lantern-opening");
+
+  setManagedTimeout("lanternEnd", () => {
+    app.classList.remove("lantern-opening");
+  }, 1200);
+}
+
+// ========================================
+// ギャラリーモード
+// ========================================
+let galleryCurrent = 1;
+const galleryTotal = cards.length;
+
+const galleryMode = document.getElementById("galleryMode");
+const galleryFrame = document.getElementById("galleryFrame");
+const galleryFlash = document.getElementById("galleryFlash");
+
+// カード番号を2桁にそろえ、ギャラリー画像のパスを作る
+function getGalleryImagePath(number) {
+  const padded = String(number).padStart(2, "0");
+  return `cards/card${padded}_0.png`;
+}
+
+// 通常画面を隠し、1枚目からギャラリーの自動表示を開始する
+function openGallery() {
+  cardAudioManager.stop();
+  
+  const app = document.getElementById("app");
+
+  clearManagedTimers("openingDraw", "openingEnd", "longPress", "lanternEnd");
+  clearManagedTimers("galleryAuto", "galleryFlash");
+
+  app.classList.remove("opening", "lantern-opening");
+  galleryFlash.classList.remove("active");
+  app.classList.add("hidden");
+  galleryMode.classList.remove("hidden");
+
+  galleryCurrent = 1;
+  galleryFrame.style.backgroundImage = `url("${getGalleryImagePath(galleryCurrent)}")`;
+
+  setManagedInterval("galleryAuto", nextGalleryImage, 8000);
+}
+
+// ギャラリーの自動表示を止め、通常のカード画面へ戻る
+function closeGallery() {
+  const app = document.getElementById("app");
+
+  clearManagedTimers("galleryAuto", "galleryFlash");
+  resetCardPointerState();
+
+  galleryFlash.classList.remove("active");
+  galleryMode.classList.add("hidden");
+  app.classList.remove("hidden");
+}
+
+// 次のギャラリー画像を先読みし、白い演出を挟んで切り替える
+function nextGalleryImage() {
+  let next = galleryCurrent + 1;
+
+  if (next > galleryTotal) {
+    next = 1;
+  }
+
+  const nextPath = getGalleryImagePath(next);
+
+  const preload = new Image();
+  preload.src = nextPath;
+
+  preload.onload = () => {
+    galleryFlash.classList.add("active");
+
+    setManagedTimeout("galleryFlash", () => {
+      galleryFrame.style.backgroundImage = `url("${nextPath}")`;
+      galleryCurrent = next;
+
+      galleryFlash.classList.remove("active");
+    }, 1200);
+  };
+}
+
+</script>
+</html>
