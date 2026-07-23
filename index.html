@@ -190,7 +190,6 @@ h1 {
   .room {
     width: 65%;
     margin: 130px auto 0;
-    padding: 0 auto 0px;
   }
 
   h1 {
@@ -236,28 +235,6 @@ h1 {
 /*ランタンエフェクト*/  
 .lantern-opening .shine {
   animation: lanternBreath 1.2s ease-in-out;
-}
-
-@keyframes lanternBreath {
-  0% {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-
-  35% {
-    opacity: 0.45;
-    transform: scale(1.05);
-  }
-
-  70% {
-    opacity: 0.25;
-    transform: scale(0.98);
-  }
-
-  100% {
-    opacity: 0;
-    transform: scale(1);
-  }
 }
 
 @keyframes lanternBreath {
@@ -331,7 +308,6 @@ h1 {
 #galleryMode button {
   margin: 10px auto 10px;
   width: 50%;
-  padding: 10px auto 10px;
   align-items: center;
   border-radius: 999px;
   border: none;
@@ -568,7 +544,7 @@ function scheduleRandomSound(card, isFirstPlay = false) {
 //ギャラリーモード
 let galleryTimer = null;
 let galleryCurrent = 1;
-const galleryTotal = 24;
+const galleryTotal = cards.length;
 
 const galleryMode = document.getElementById("galleryMode");
 const galleryFrame = document.getElementById("galleryFrame");
