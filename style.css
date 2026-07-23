@@ -1,0 +1,313 @@
+  
+/* 基本レイアウト */
+body {
+  margin: 0;
+  background: #e8e2d8;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  color: #3c2f24;
+}
+
+#result {
+  min-height: 30vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.app {
+  width: 100%;
+  aspect-ratio: 9 / 17;
+
+  background: url("window.png") center top / cover no-repeat;
+
+  box-shadow: 0 10px 40px rgba(0,0,0,.25);
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+}
+
+.room {
+  width: min(90%, 560px);
+  margin: 140px auto;
+  position: relative;
+  border-radius: 26px;
+  background: rgba(255, 248, 230, 0.2);
+  box-shadow: 0 20px 50px rgba(80, 55, 30, 0.25);
+  overflow: hidden;
+  backdrop-filter: blur(2px);
+  padding: 22px 18px 24px;
+}
+
+.shine {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle,
+    rgba(255,244,204,0.95),
+    rgba(255,244,204,0.35) 45%,
+    rgba(255,244,204,0.12) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scale(1.15);
+  pointer-events: none;
+}
+
+.whiteout {
+  position: fixed;
+  inset: 0;
+  background: #fff8df;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* カード内容 */
+h1 {
+  font-size: 2.2rem;
+  margin: 18px 0;
+}
+
+.subtitle {
+  line-height: 120%;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.card-image {
+  width: 70%;
+  max-width: 360px;
+  max-height: 45vh;
+  aspect-ratio: 3 / 4;
+  object-fit: contain;
+  border-radius: 16px;
+  display: block;
+  margin: 18px auto;
+  box-shadow: 0 16px 35px rgba(40, 25, 10, 0.35);
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.message {
+  font-size: 1.1rem;
+  line-height: 120%;
+  /* white-space: pre-line; */
+}
+
+.card-name {
+  font-size: 2.2rem;
+  margin: 18px 0 8px;
+}
+
+.keyword {
+  font-size: 1.2rem;
+  opacity: 0.75;
+  margin-bottom: 18px;
+}
+
+/* 操作部分 */
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 34px;
+  font-size: 16px;
+  background: #d8bd7f;
+  color: #3a2a17;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(90, 55, 20, 0.25);
+}
+
+button:disabled {
+  opacity: 0.6;
+}
+
+.button-area {
+  text-align: center;
+  margin: 20px auto 32px;
+  min-height: 18vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-area button {
+  width: 220px;
+}
+
+.footer {
+  margin-top: 0;
+  font-size: 12px;
+  opacity: 0.65;
+}
+
+/* 抽選演出 */
+.opening .window {
+  animation: windowGlow 1.6s ease-in-out;
+}
+
+.opening .shine {
+  animation: shineOpen 1.6s ease-in-out;
+}
+
+.app.opening ~ .whiteout {
+  animation: whiteFlash 1.8s ease-in-out;
+}
+
+@keyframes windowGlow {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.02); box-shadow: 0 0 55px rgba(255,210,120,0.9); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shineOpen {
+  0% { opacity: 0; transform: scale(0.4); }
+  50% { opacity: 1; transform: scale(1.25); }
+  100% { opacity: 0; transform: scale(2.2); }
+}
+
+@keyframes whiteFlash {
+  0% { opacity: 0; }
+  55% { opacity: 0; }
+  75% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+
+/* スマートフォン表示 */
+@media (max-width: 500px) {
+  .room {
+    width: 65%;
+    margin: 130px auto 0;
+  }
+
+  h1 {
+    font-size: 38px;
+    margin: 5px auto;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    margin-bottom: 5px;
+  }
+     
+  .card-image {
+    width: 100%;
+    margin: 0 auto 5px;
+  }
+
+  .card-name {
+    font-size: 28px;
+    margin: 0 auto 2px;
+  }
+
+  .keyword {
+    font-size: 16px;
+    margin: 0 auto 2px;
+  }
+
+  .message {
+    font-size: 16px;
+    line-height: 110%;
+    white-space: pre-line;
+  }
+    
+  button {
+    padding: 12px 30px;
+  }
+  .button-area {
+    margin: 10px auto 5px;
+  }
+}
+
+/*ランタンエフェクト*/  
+.lantern-opening .shine {
+  animation: lanternBreath 1.2s ease-in-out;
+}
+
+@keyframes lanternBreath {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+
+  35% {
+    opacity: 0.45;
+    transform: scale(1.05);
+  }
+
+  70% {
+    opacity: 0.25;
+    transform: scale(0.98);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+/*ギャラリーモード*/
+.hidden {
+  display: none;
+}
+
+#galleryMode {
+  width: 100%;
+  min-height: 100vh;
+  padding: 12px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#galleryMode.hidden {
+  display: none;
+}
+
+.gallery-frame {
+  flex: 1;
+  position: relative;
+  width: 100%;
+
+  background-image: url("cards/card01_0.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+#galleryFlash {
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s ease;
+}
+
+#galleryFlash.active {
+  opacity: 1;
+}
+
+#galleryMode button {
+  margin: 10px auto;
+  width: 50%;
+  align-items: center;
+  border-radius: 999px;
+  border: none;
+  background: #d9be72;
+  color: #4a321f;
+  font-size: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
