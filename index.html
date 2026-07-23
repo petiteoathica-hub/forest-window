@@ -413,7 +413,97 @@ function setManagedInterval(name, callback, delay) {
 // ========================================
 // カードの抽選・表示・タップ操作
 // ========================================
-let longPressed = false;
+const cardPointerState = {
+  activePointerId: null,
+  longPressTriggered: false,
+  pointerCanceled: false,
+  actionLocked: false,
+};
+
+// カード操作の状態と、途中の長押し判定を初期状態へ戻す
+function resetCardPointerState() {
+  clearManagedTimer("longPress");
+
+  cardPointerState.activePointerId = null;
+  cardPointerState.longPressTriggered = false;
+  cardPointerState.pointerCanceled = false;
+  cardPointerState.actionLocked = false;
+}
+
+// 短く押したときだけ、演出後の再抽選を1回開始する
+function handleCardClick() {
+  if (
+    cardPointerState.longPressTriggered ||
+    cardPointerState.pointerCanceled ||
+    cardPointerState.actionLocked
+  ) {
+    return;
+  }
+
+  cardPointerState.actionLocked = true;
+
+  const app = document.getElementById("app");
+  app.classList.add("opening");
+
+  setManagedTimeout("openingDraw", () => {
+    drawCard();
+  }, 1350);
+
+  setManagedTimeout("openingEnd", () => {
+    app.classList.remove("opening");
+  }, 1900);
+}
+
+// 主要な指または左クリックで、0.8秒の長押し判定を開始する
+function handleCardPointerDown(event) {
+  if (
+    !event.isPrimary ||
+    event.button !== 0 ||
+    cardPointerState.activePointerId !== null ||
+    cardPointerState.actionLocked
+  ) {
+    return;
+  }
+
+  cardPointerState.activePointerId = event.pointerId;
+  cardPointerState.longPressTriggered = false;
+  cardPointerState.pointerCanceled = false;
+
+  setManagedTimeout("longPress", () => {
+    if (cardPointerState.activePointerId !== event.pointerId) {
+      return;
+    }
+
+    cardPointerState.longPressTriggered = true;
+    cardPointerState.actionLocked = true;
+    startLanternEffect();
+
+    setManagedTimeout("galleryOpen", () => {
+      openGallery();
+    }, 1200);
+  }, 800);
+}
+
+// 指やマウスをカード上で離し、未成立の長押し判定を停止する
+function handleCardPointerUp(event) {
+  if (cardPointerState.activePointerId !== event.pointerId) {
+    return;
+  }
+
+  clearManagedTimer("longPress");
+  cardPointerState.activePointerId = null;
+}
+
+// カード外への移動や端末側の中断時に、未成立の長押し判定を中止する
+function cancelCardPointerPress(event) {
+  if (cardPointerState.activePointerId !== event.pointerId) {
+    return;
+  }
+
+  clearManagedTimer("longPress");
+  cardPointerState.activePointerId = null;
+  cardPointerState.pointerCanceled = true;
+}
 
 // 最初の抽選演出を開始し、演出の途中でカードを表示する
 function startOracle() {
@@ -435,6 +525,8 @@ function startOracle() {
 
 // カードをランダムに1枚選び、内容と画像を画面に表示する
 function drawCard() {
+  resetCardPointerState();
+
   // カード指定表示テスト用
   // const randomIndex = 15;
   const randomIndex = Math.floor(Math.random() * cards.length);
@@ -452,46 +544,11 @@ function drawCard() {
 
   const cardImage = document.getElementById("cardImage");
 
-  // 短くタップしたときは、演出後にカードを再抽選する
-  cardImage.addEventListener("click", () => {
-    if (!longPressed) {
-      const app = document.getElementById("app");
-
-      app.classList.add("opening");
-
-      setManagedTimeout("openingDraw", () => {
-        drawCard();
-      }, 1350);
-
-      setManagedTimeout("openingEnd", () => {
-        app.classList.remove("opening");
-      }, 1900);
-    }
-  });
-
-  // 長押しを開始し、800ミリ秒続いたらギャラリーを開く
-  cardImage.addEventListener("pointerdown", () => {
-    longPressed = false;
-
-    setManagedTimeout("longPress", () => {
-      longPressed = true;
-      startLanternEffect();
-
-      setManagedTimeout("galleryOpen", () => {
-        openGallery();
-      }, 1200);
-    }, 800);
-  });
-
-  // 指を離したときは長押し判定を取り消す
-  cardImage.addEventListener("pointerup", () => {
-    clearManagedTimer("longPress");
-  });
-
-  // 指やポインターが画像の外へ出たときも長押し判定を取り消す
-  cardImage.addEventListener("pointerleave", () => {
-    clearManagedTimer("longPress");
-  });
+  cardImage.addEventListener("click", handleCardClick);
+  cardImage.addEventListener("pointerdown", handleCardPointerDown);
+  cardImage.addEventListener("pointerup", handleCardPointerUp);
+  cardImage.addEventListener("pointerleave", cancelCardPointerPress);
+  cardImage.addEventListener("pointercancel", cancelCardPointerPress);
 
   // 長押し時にブラウザのメニューが表示されるのを防ぐ
   cardImage.addEventListener("contextmenu", (event) => {
@@ -623,6 +680,7 @@ function closeGallery() {
   const app = document.getElementById("app");
 
   clearManagedTimers("galleryAuto", "galleryFlash");
+  resetCardPointerState();
 
   galleryFlash.classList.remove("active");
   galleryMode.classList.add("hidden");
