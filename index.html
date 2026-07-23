@@ -363,13 +363,13 @@ button:disabled {
 
 <script src="cards.js"></script>
 <script>
-const soundPlayer = new Audio();
-let randomSoundTimer = null;
-let currentSoundCard = null; 
-
+// ========================================
+// カードの抽選・表示・タップ操作
+// ========================================
 let pressTimer;
 let longPressed = false;
 
+// 最初の抽選演出を開始し、演出の途中でカードを表示する
 function startOracle() {
   const app = document.getElementById("app");
   const button = document.getElementById("drawButton");
@@ -387,9 +387,10 @@ function startOracle() {
   }, 1900);
 }
 
+// カードをランダムに1枚選び、内容と画像を画面に表示する
 function drawCard() {
-  //カード指定表示テスト用
-  //const randomIndex = 15;
+  // カード指定表示テスト用
+  // const randomIndex = 15;
   const randomIndex = Math.floor(Math.random() * cards.length);
   const card = cards[randomIndex];
   console.log("抽選:", randomIndex, card.name, card.sound);
@@ -405,6 +406,7 @@ function drawCard() {
 
   const cardImage = document.getElementById("cardImage");
 
+  // 短くタップしたときは、演出後にカードを再抽選する
   cardImage.addEventListener("click", () => {
     if (!longPressed) {
       const app = document.getElementById("app");
@@ -421,6 +423,7 @@ function drawCard() {
   }
 });
 
+  // 長押しを開始し、800ミリ秒続いたらギャラリーを開く
   cardImage.addEventListener("pointerdown", () => {
     longPressed = false;
 
@@ -434,20 +437,30 @@ function drawCard() {
     }, 800);
   });
 
+  // 指を離したときは長押し判定を取り消す
   cardImage.addEventListener("pointerup", () => {
     clearTimeout(pressTimer);
   });
 
+  // 指やポインターが画像の外へ出たときも長押し判定を取り消す
   cardImage.addEventListener("pointerleave", () => {
     clearTimeout(pressTimer);
   });
-  
+
+  // 長押し時にブラウザのメニューが表示されるのを防ぐ
   cardImage.addEventListener("contextmenu", (event) => {
     event.preventDefault();
   });
 }
 
-//音声用の関数
+// ========================================
+// カードごとの音声再生
+// ========================================
+const soundPlayer = new Audio();
+let randomSoundTimer = null;
+let currentSoundCard = null;
+
+// 再生中の音声とランダム再生の予約をすべて停止する
 function stopCardSound() {
   if (randomSoundTimer !== null) {
     clearTimeout(randomSoundTimer);
@@ -463,7 +476,7 @@ function stopCardSound() {
   soundPlayer.load();
 }
 
-
+// カードのsoundModeに合わせて音声の再生方法を切り替える
 function playCardSound(card) {
   stopCardSound();
 
@@ -493,7 +506,7 @@ function playCardSound(card) {
   }
 }
 
-
+// randomモードの音声を一定の範囲内のランダムな間隔で再生する
 function scheduleRandomSound(card, isFirstPlay = false) {
   const minDelay = isFirstPlay ? 0 : 30000;
   const maxDelay = isFirstPlay ? 5000 : 90000;
@@ -513,7 +526,23 @@ function scheduleRandomSound(card, isFirstPlay = false) {
   }, delay);
 }
 
-//ギャラリーモード
+// ========================================
+// 長押し時のランタン演出
+// ========================================
+
+// カードの長押しを検知したときにランタンの光を表示する
+function startLanternEffect() {
+  const app = document.getElementById("app");
+  app.classList.add("lantern-opening");
+
+  setTimeout(() => {
+    app.classList.remove("lantern-opening");
+  }, 1200);
+}
+
+// ========================================
+// ギャラリーモード
+// ========================================
 let galleryTimer = null;
 let galleryCurrent = 1;
 const galleryTotal = cards.length;
@@ -522,11 +551,13 @@ const galleryMode = document.getElementById("galleryMode");
 const galleryFrame = document.getElementById("galleryFrame");
 const galleryFlash = document.getElementById("galleryFlash");
 
+// カード番号を2桁にそろえ、ギャラリー画像のパスを作る
 function getGalleryImagePath(number) {
   const padded = String(number).padStart(2, "0");
   return `cards/card${padded}_0.png`;
 }
 
+// 通常画面を隠し、1枚目からギャラリーの自動表示を開始する
 function openGallery() {
   stopCardSound();
   
@@ -543,6 +574,7 @@ function openGallery() {
   }
 }
 
+// ギャラリーの自動表示を止め、通常のカード画面へ戻る
 function closeGallery() {
   const app = document.getElementById("app");
 
@@ -552,16 +584,8 @@ function closeGallery() {
   clearInterval(galleryTimer);
   galleryTimer = null;
 }
-  
-function startLanternEffect() {
-  const app = document.getElementById("app");
-  app.classList.add("lantern-opening");
 
-  setTimeout(() => {
-    app.classList.remove("lantern-opening");
-  }, 1200);
-}
-  
+// 次のギャラリー画像を先読みし、白い演出を挟んで切り替える
 function nextGalleryImage() {
   let next = galleryCurrent + 1;
 
