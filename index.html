@@ -540,7 +540,7 @@ function drawCard() {
     <p class="message">${card.message}</p>
   `;
 
-  playCardSound(card);
+  cardAudioManager.play(card);
 
   const cardImage = document.getElementById("cardImage");
 
@@ -559,71 +559,102 @@ function drawCard() {
 // ========================================
 // カードごとの音声再生
 // ========================================
-const soundPlayer = new Audio();
-let currentSoundCard = null;
+const cardAudioManager = {
+  player: new Audio(),
+  currentCard: null,
+  sessionId: 0,
 
-// 再生中の音声とランダム再生の予約をすべて停止する
-function stopCardSound() {
-  clearManagedTimer("randomSound");
+  // 前の音声を停止してから、カードのsoundModeに合う再生方法を選ぶ
+  play(card) {
+    this.stop();
 
-  currentSoundCard = null;
-
-  soundPlayer.pause();
-  soundPlayer.currentTime = 0;
-  soundPlayer.loop = false;
-  soundPlayer.removeAttribute("src");
-  soundPlayer.load();
-}
-
-// カードのsoundModeに合わせて音声の再生方法を切り替える
-function playCardSound(card) {
-  stopCardSound();
-
-  if (!card.sound || card.soundMode === "none") {
-    return;
-  }
-
-  currentSoundCard = card;
-
-  soundPlayer.src = card.sound;
-  soundPlayer.loop = false;
-
-  switch (card.soundMode) {
-    case "loop":
-      soundPlayer.loop = true;
-      soundPlayer.play().catch(() => {});
-      break;
-
-    case "random":
-      scheduleRandomSound(card, true);
-      break;
-
-    case "once":
-    default:
-      soundPlayer.play().catch(() => {});
-      break;
-  }
-}
-
-// randomモードの音声を一定の範囲内のランダムな間隔で再生する
-function scheduleRandomSound(card, isFirstPlay = false) {
-  const minDelay = isFirstPlay ? 0 : 30000;
-  const maxDelay = isFirstPlay ? 5000 : 90000;
-
-  const delay =
-    Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
-
-  setManagedTimeout("randomSound", () => {
-    if (currentSoundCard !== card) {
+    if (!card.sound || card.soundMode === "none") {
       return;
     }
 
-    soundPlayer.currentTime = 0;
-    soundPlayer.play().catch(() => {});
+    this.currentCard = card;
+    this.player.src = card.sound;
+    this.player.loop = false;
 
-    scheduleRandomSound(card, false);
-  }, delay);
-}
+    switch (card.soundMode) {
+      case "loop":
+        this.playLoop();
+        break;
+
+      case "random":
+        this.startRandom(card);
+        break;
+
+      case "once":
+      default:
+        this.playOnce();
+        break;
+    }
+  },
+
+  // 再生中の音声とランダム再生の予約をすべて停止する
+  stop() {
+    this.sessionId += 1;
+    clearManagedTimer("randomSound");
+
+    this.currentCard = null;
+    this.resetPlayer();
+  },
+
+  // 音声プレイヤーを停止し、次のカードで使える初期状態へ戻す
+  resetPlayer() {
+    this.player.pause();
+    this.player.currentTime = 0;
+    this.player.loop = false;
+    this.player.removeAttribute("src");
+    this.player.load();
+  },
+
+  // ブラウザに再生を拒否された場合も、画面の処理を止めずに再生を試す
+  safePlay() {
+    this.player.play().catch(() => {});
+  },
+
+  // 音声を1回だけ再生する
+  playOnce() {
+    this.player.loop = false;
+    this.safePlay();
+  },
+
+  // 音声のループを有効にして再生する
+  playLoop() {
+    this.player.loop = true;
+    this.safePlay();
+  },
+
+  // randomモードの初回再生を予約する
+  startRandom(card) {
+    this.scheduleRandom(card, true, this.sessionId);
+  },
+
+  // randomモードの音声を一定の範囲内のランダムな間隔で再生する
+  scheduleRandom(card, isFirstPlay, sessionId) {
+    const minDelay = isFirstPlay ? 0 : 30000;
+    const maxDelay = isFirstPlay ? 5000 : 90000;
+
+    const delay =
+      Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+
+    setManagedTimeout("randomSound", () => {
+      if (
+        this.sessionId !== sessionId ||
+        this.currentCard !== card
+      ) {
+        return;
+      }
+
+      this.player.currentTime = 0;
+      this.safePlay();
+
+      this.scheduleRandom(card, false, sessionId);
+    }, delay);
+  },
+};
 
 // ========================================
 // 長押し時のランタン演出
@@ -657,7 +688,7 @@ function getGalleryImagePath(number) {
 
 // 通常画面を隠し、1枚目からギャラリーの自動表示を開始する
 function openGallery() {
-  stopCardSound();
+  cardAudioManager.stop();
   
   const app = document.getElementById("app");
 
