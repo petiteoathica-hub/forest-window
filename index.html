@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="小屋の幻灯">
 
 <style>  
+/* 基本レイアウト */
 body {
   margin: 0;
   background: #e8e2d8;
@@ -53,41 +54,41 @@ body {
   padding: 22px 18px 24px;
 }
 
-  .shine {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle,
-      rgba(255,244,204,0.95),
-      rgba(255,244,204,0.35) 45%,
-      rgba(255,244,204,0.12) 70%,
-      transparent 100%
-    );
-    
-    opacity: 0;
-    transform: scale(1.15);
-    pointer-events: none;
-　}
-
-  .whiteout {
-    position: fixed;
-    inset: 0;
-    background: #fff8df;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 10;
-  }
-
-h1 {
-  font-size: 2.2rem;
-  margin: 18px 0 18px;
+.shine {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle,
+    rgba(255,244,204,0.95),
+    rgba(255,244,204,0.35) 45%,
+    rgba(255,244,204,0.12) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scale(1.15);
+  pointer-events: none;
 }
 
- .subtitle {
-    line-height: 120%;
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
+.whiteout {
+  position: fixed;
+  inset: 0;
+  background: #fff8df;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* カード内容 */
+h1 {
+  font-size: 2.2rem;
+  margin: 18px 0;
+}
+
+.subtitle {
+  line-height: 120%;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
 
 .card-image {
   width: 70%;
@@ -97,96 +98,99 @@ h1 {
   object-fit: contain;
   border-radius: 16px;
   display: block;
-  margin: 18px auto 18px;
+  margin: 18px auto;
   box-shadow: 0 16px 35px rgba(40, 25, 10, 0.35);
   -webkit-touch-callout: none;
   user-select: none;
   -webkit-user-select: none;
 }
-    
-  .message {
-    font-size: 1.1rem;
-    line-height: 120%;
-    /*white-space: pre-line;*/
-  }
 
-  .card-name {
-    font-size: 2.2rem;
-    margin: 18px 0 8px;
-  }
-
-  .keyword {
-    font-size: 1.2rem;
-    opacity: 0.75;
-    margin-bottom: 18px;
-  }
-
-  button {
-    border: none;
-    border-radius: 999px;
-    padding: 14px 34px;
-    font-size: 16px;
-    background: #d8bd7f;
-    color: #3a2a17;
-    cursor: pointer;
-    box-shadow: 0 6px 14px rgba(90, 55, 20, 0.25);
-  }
-
-  button:disabled {
-    opacity: 0.6;
-  }
-
- .button-area {
-   text-align: center;
-   margin: 20px auto 32px;
-   min-height: 18vh;
-   display: flex;
-   align-items: center;
-   justify-content: center;
+.message {
+  font-size: 1.1rem;
+  line-height: 120%;
+  /* white-space: pre-line; */
 }
- 
-  .button-area button {
-   width: 220px;
+
+.card-name {
+  font-size: 2.2rem;
+  margin: 18px 0 8px;
 }
-  
-  .footer {
-    margin-top: 0px;
-    font-size: 12px;
-    opacity: 0.65;
-  }
 
-  .opening .window {
-    animation: windowGlow 1.6s ease-in-out;
-  }
+.keyword {
+  font-size: 1.2rem;
+  opacity: 0.75;
+  margin-bottom: 18px;
+}
 
-  .opening .shine {
-    animation: shineOpen 1.6s ease-in-out;
-  }
+/* 操作部分 */
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 34px;
+  font-size: 16px;
+  background: #d8bd7f;
+  color: #3a2a17;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(90, 55, 20, 0.25);
+}
 
-  .app.opening ~ .whiteout {
-    animation: whiteFlash 1.8s ease-in-out;
-  }
+button:disabled {
+  opacity: 0.6;
+}
 
-  @keyframes windowGlow {
-    0% { transform: scale(1); }
-    45% { transform: scale(1.02); box-shadow: 0 0 55px rgba(255,210,120,0.9); }
-    100% { transform: scale(1); }
-  }
+.button-area {
+  text-align: center;
+  margin: 20px auto 32px;
+  min-height: 18vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  @keyframes shineOpen {
-    0% { opacity: 0; transform: scale(0.4); }
-    50% { opacity: 1; transform: scale(1.25); }
-    100% { opacity: 0; transform: scale(2.2); }
-  }
+.button-area button {
+  width: 220px;
+}
 
-  @keyframes whiteFlash {
-    0% { opacity: 0; }
-    55% { opacity: 0; }
-    75% { opacity: 0.95; }
-    100% { opacity: 0; }
-  }
+.footer {
+  margin-top: 0;
+  font-size: 12px;
+  opacity: 0.65;
+}
 
- @media (max-width: 500px) {
+/* 抽選演出 */
+.opening .window {
+  animation: windowGlow 1.6s ease-in-out;
+}
+
+.opening .shine {
+  animation: shineOpen 1.6s ease-in-out;
+}
+
+.app.opening ~ .whiteout {
+  animation: whiteFlash 1.8s ease-in-out;
+}
+
+@keyframes windowGlow {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.02); box-shadow: 0 0 55px rgba(255,210,120,0.9); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shineOpen {
+  0% { opacity: 0; transform: scale(0.4); }
+  50% { opacity: 1; transform: scale(1.25); }
+  100% { opacity: 0; transform: scale(2.2); }
+}
+
+@keyframes whiteFlash {
+  0% { opacity: 0; }
+  55% { opacity: 0; }
+  75% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+
+/* スマートフォン表示 */
+@media (max-width: 500px) {
   .room {
     width: 65%;
     margin: 130px auto 0;
@@ -194,7 +198,7 @@ h1 {
 
   h1 {
     font-size: 38px;
-    margin: 5px auto 5px;
+    margin: 5px auto;
   }
 
   .subtitle {
@@ -204,17 +208,17 @@ h1 {
      
   .card-image {
     width: 100%;
-    margin: 0px auto 5px;
+    margin: 0 auto 5px;
   }
 
   .card-name {
     font-size: 28px;
-    margin: 0px auto 2px;
+    margin: 0 auto 2px;
   }
 
   .keyword {
     font-size: 16px;
-    margin: 0px auto 2px;
+    margin: 0 auto 2px;
   }
 
   .message {
@@ -226,10 +230,9 @@ h1 {
   button {
     padding: 12px 30px;
   }
- .button-area {
-   margin: 10px auto 5px;
- }
-   
+  .button-area {
+    margin: 10px auto 5px;
+  }
 }
 
 /*ランタンエフェクト*/  
@@ -306,7 +309,7 @@ h1 {
 }
 
 #galleryMode button {
-  margin: 10px auto 10px;
+  margin: 10px auto;
   width: 50%;
   align-items: center;
   border-radius: 999px;
